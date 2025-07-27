@@ -31,16 +31,52 @@ type PDU struct {
 // turns out enums in golang aren't really a thing! this will do for now
 type FunctionCode uint8
 
+// ref: chpt6 / pgs 11-47 https://modbus.org/docs/Modbus_Application_Protocol_V1_1b3.pdf
 const (
-	CoilRead     FunctionCode = 0x01
-	RegisterRead FunctionCode = 0x03
-	//.... FIXME: add the rest!
+	ReadCoils                      FunctionCode = 0x01
+	ReadDiscreteInputs             FunctionCode = 0x02
+	ReadHoldingRegisters           FunctionCode = 0x03
+	ReadInputRegisters             FunctionCode = 0x04
+	WriteSingleCoil                FunctionCode = 0x05
+	WriteSingleRegister            FunctionCode = 0x06
+	ReadExceptionStatus            FunctionCode = 0x07 // serial only, optional
+	Diagnostics                    FunctionCode = 0x08 // serial only
+	GetCommEventCounter            FunctionCode = 0x0B // serial only
+	GetCommEventLog                FunctionCode = 0x0C // serial only
+	ReadDeviceIdentification       FunctionCode = 0x0E
+	WriteMultipleCoils             FunctionCode = 0x0F
+	WriteMultipleRegisters         FunctionCode = 0x10
+	ReportServerID                 FunctionCode = 0x11
+	ReadFileRecord                 FunctionCode = 0x14
+	WriteFileRecord                FunctionCode = 0x15
+	MaskWriteRegister              FunctionCode = 0x16
+	ReadWriteMultipleRegisters     FunctionCode = 0x17
+	ReadFIFOQueue                  FunctionCode = 0x18
+	EncapsulatedInterfaceTransport FunctionCode = 0x2B
 )
 
-// neat use of method receiver pattern with go
 func (fc FunctionCode) IsValid() bool {
 	switch fc {
-	case CoilRead, RegisterRead:
+	case
+		ReadCoils,
+		ReadDiscreteInputs,
+		ReadHoldingRegisters,
+		ReadInputRegisters,
+		WriteSingleCoil,
+		WriteSingleRegister,
+		ReadExceptionStatus,
+		Diagnostics,
+		GetCommEventCounter,
+		GetCommEventLog,
+		ReadDeviceIdentification,
+		WriteMultipleCoils,
+		WriteMultipleRegisters,
+		ReportServerID,
+		ReadFileRecord,
+		WriteFileRecord,
+		MaskWriteRegister,
+		ReadWriteMultipleRegisters,
+		EncapsulatedInterfaceTransport:
 		return true
 	default:
 		return false
