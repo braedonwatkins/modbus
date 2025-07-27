@@ -80,13 +80,9 @@ func reqToFrame(req []byte, n int) (*TCP_Frame, error) {
 	if pduLen+MBAP_LEN < n {
 		return nil, errors.New("Buffer is too short for complete frame")
 	}
-	functionCode := FunctionCode(req[7])
-	if !functionCode.IsValid() {
-		return nil, errors.New("Invalid function code")
-	}
 
 	pdu := &PDU{
-		FunctionCode: functionCode,
+		FunctionCode: FunctionCode(req[7]),
 		Data:         req[8 : 8+pduLen-1], // -1 for function code byte
 	}
 
@@ -97,16 +93,51 @@ func reqToFrame(req []byte, n int) (*TCP_Frame, error) {
 	return tcp_frame, nil
 }
 
-// FIXME: implement
-func handleRequest(frame *TCP_Frame) []byte {
+func handleRequest(frame *TCP_Frame) ([]byte, error) {
 	fmt.Printf("Parsed frame %+v", frame)
 	switch frame.FunctionCode {
-	case 0x01:
-		return []byte{}
-	case 0x03:
-		return []byte{}
+	// FIXME: implement these!!
+	// case ReadCoils:
+	// 	return handleReadCoils(frame)
+	// case ReadDiscreteInputs:
+	// 	return handleReadDiscreteInputs(frame)
+	// case ReadHoldingRegisters:
+	// 	return handleReadHoldingRegisters(frame)
+	// case ReadInputRegisters:
+	// 	return handleReadInputRegisters(frame)
+	// case WriteSingleCoil:
+	// 	return handleWriteSingleCoil(frame)
+	// case WriteSingleRegister:
+	// 	return handleWriteSingleRegister(frame)
+	// case WriteMultipleCoils:
+	// 	return handleWriteMultipleCoils(frame)
+	// case WriteMultipleRegisters:
+	// 	return handleWriteMultipleRegisters(frame)
+	// TODO: implement these later
+	// case ReadExceptionStatus:
+	// 	return handleReadExceptionStatus(frame)
+	// case Diagnostics:
+	// 	return handleDiagnostics(frame)
+	// case GetCommEventCounter:
+	// 	return handleGetCommEventCounter(frame)
+	// case GetCommEventLog:
+	// 	return handleGetCommEventLog(frame)
+	// case ReadDeviceIdentification:
+	// 	return handleReadDeviceIdentification(frame)
+	// case ReportServerID:
+	// 	return handleReportServerID(frame)
+	// case ReadFileRecord:
+	// 	return handleReadFileRecord(frame)
+	// case WriteFileRecord:
+	// 	return handleWriteFileRecord(frame)
+	// case MaskWriteRegister:
+	// 	return handleMaskWriteRegister(frame)
+	// case ReadWriteMultipleRegisters:
+	// 	return handleReadWriteMultipleRegisters(frame)
+	// case EncapsulatedInterfaceTransport:
+	// 	return handleEncapsulatedInterfaceTransport(frame)
 	default:
-		return createErrorResponse(frame)
+		return nil, fmt.Errorf("unsupported function code: 0x%X", frame.FunctionCode)
 	}
 }
 
