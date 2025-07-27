@@ -10,11 +10,13 @@ type CRC uint32 // checksum
 
 // TCP frame for Modbus (ref: page 5 of https://modbus.org/docs/Modbus_Messaging_Implementation_Guide_V1_0b.pdf)
 type TCP_Frame struct {
-	Header
+	MBAP
 	PDU
 }
 
-type Header struct {
+const MBAP_LEN = 7
+
+type MBAP struct {
 	TransactionID uint16
 	ProtocolID    uint16 // should always be 0 as this implies Modbus
 	Length        uint16 // number of following bytes (I believe for the PDU + UnitID)
@@ -26,10 +28,21 @@ type PDU struct {
 	Data         []byte
 }
 
-// dont like that this could be any arbitrary uint8 instead of constrained to the list but turns out enums in golang are... silly
+// turns out enums in golang aren't really a thing! this will do for now
 type FunctionCode uint8
 
 const (
 	CoilRead     FunctionCode = 0x01
 	RegisterRead FunctionCode = 0x03
+	//.... FIXME: add the rest!
 )
+
+// neat use of method receiver pattern with go
+func (fc FunctionCode) IsValid() bool {
+	switch fc {
+	case CoilRead, RegisterRead:
+		return true
+	default:
+		return false
+	}
+}
