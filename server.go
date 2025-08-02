@@ -50,7 +50,10 @@ func handleConnection(conn net.Conn) {
 	if err != nil {
 		fmt.Printf("Error parsing frame %s\n", err)
 	}
-	res := handleRequest(frame)
+	res, err := handleRequest(frame)
+	if err != nil {
+		fmt.Printf("Error handling request %s\n", err)
+	}
 
 	n, err = conn.Write([]byte(res))
 	if err != nil || n < len(res) {
