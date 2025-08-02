@@ -9,6 +9,9 @@ import (
 	"net"
 )
 
+// simulated hardware
+var hw = NewHardware()
+
 func RunServer() error {
 	listener, err := net.Listen("tcp", "127.0.0.1:502")
 	if err != nil {
@@ -98,10 +101,17 @@ func reqToFrame(req []byte, n int) (*TCP_Frame, error) {
 
 func handleRequest(frame *TCP_Frame) ([]byte, error) {
 	fmt.Printf("Parsed frame %+v", frame)
-	switch frame.FunctionCode {
+
+	// TODO: consider lifting this and passing as a param
+	data := frame.PDU.Data
+
+	switch frame.PDU.FunctionCode {
 	// FIXME: implement these!!
-	// case ReadCoils:
-	// 	return handleReadCoils(frame)
+	case ReadCoils:
+		startAddress := binary.BigEndian.Uint16(data[0:2])
+		quantity := binary.BigEndian.Uint16(data[2:4])
+		handleReadCoils(hw, startAddress, quantity)
+
 	// case ReadDiscreteInputs:
 	// 	return handleReadDiscreteInputs(frame)
 	// case ReadHoldingRegisters:
