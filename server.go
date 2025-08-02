@@ -51,17 +51,17 @@ func handleConnection(conn net.Conn) {
 
 	frame, err := reqToFrame(req, n)
 	if err != nil {
-		fmt.Printf("Error parsing frame %s\n", err)
+		fmt.Errorf("Error parsing frame %s\n", err)
 	}
 	res, err := handleRequest(frame)
 	if err != nil {
-		fmt.Printf("Error handling request %s\n", err)
+		fmt.Errorf("Error handling request %s\n", err)
 	}
 
 	n, err = conn.Write([]byte(res))
 	if err != nil || n < len(res) {
 		// FIXME: figure out how to more gracefully handle this!
-		fmt.Printf("Error writing to client")
+		fmt.Errorf("Error writing to client")
 	}
 
 }
@@ -110,8 +110,7 @@ func handleRequest(frame *TCP_Frame) ([]byte, error) {
 	case ReadCoils:
 		startAddress := binary.BigEndian.Uint16(data[0:2])
 		quantity := binary.BigEndian.Uint16(data[2:4])
-		handleReadCoils(hw, startAddress, quantity)
-
+		return handleReadCoils(hw, startAddress, quantity)
 	// case ReadDiscreteInputs:
 	// 	return handleReadDiscreteInputs(frame)
 	// case ReadHoldingRegisters:
