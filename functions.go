@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-const MAX_READ_COILS = uint16(2000)
+const MAX_READ_COILS = 0x7D0
 
 func handleReadCoils(hw *Hardware, startAddress uint16, quantity uint16) ([]bool, error) {
 	hw.mu.RLock()
