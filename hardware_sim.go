@@ -7,10 +7,10 @@ type RegisterType uint8
 // ref: page 11 https://www.modbus.org/docs/Modbus_Application_Protocol_V1_1b3.pdf
 type Hardware struct {
 	mu               sync.RWMutex
-	coils            map[uint16]bool
-	discreteInputs   map[uint16]bool
-	inputRegisters   map[uint16]uint16
-	holdingRegisters map[uint16]uint16
+	coils            []bool
+	discreteInputs   []bool
+	inputRegisters   []uint16
+	holdingRegisters []uint16
 }
 
 func (h *Hardware) simulate_data() {
@@ -63,10 +63,10 @@ func (h *Hardware) simulate_data() {
 
 func NewHardware() *Hardware {
 	hardware := &Hardware{
-		coils:            make(map[uint16]bool),
-		discreteInputs:   make(map[uint16]bool),
-		inputRegisters:   make(map[uint16]uint16),
-		holdingRegisters: make(map[uint16]uint16),
+		coils:            []bool{},
+		discreteInputs:   []bool{},
+		inputRegisters:   []uint16{},
+		holdingRegisters: []uint16{},
 	}
 
 	hardware.simulate_data()
